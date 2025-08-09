@@ -55,3 +55,5 @@ test-connection.js
 test-connection.html
 check-database.js
 supabase-config.js
+# Local Netlify folder
+.netlify
