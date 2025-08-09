@@ -8,8 +8,4 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[context.production.environment]
-  NODE_ENV = "production"
-
-[context.deploy-preview.environment]
-  NODE_ENV = "development"
+# Do not force NODE_ENV here; Netlify needs devDependencies (e.g., TypeScript) during build
