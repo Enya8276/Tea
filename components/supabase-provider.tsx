@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js'
 
 type SupabaseContext = {
-  supabase: SupabaseClient
+  supabase: SupabaseClient | null
   user: User | null
 }
 
@@ -15,29 +15,43 @@ export default function SupabaseProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [supabase] = useState(() =>
-    createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-  )
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
   const [user, setUser] = useState<User | null>(null)
 
+  // Lazily create the client on the client-side only to avoid build-time env requirements
   useEffect(() => {
-    const getUser = async () => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (url && key) {
+      const client = createClient(url, key)
+      setSupabase(client)
+    } else {
+      // Missing envs: keep supabase null; UI will render but no auth/data until env configured
+      console.warn('Supabase env variables are missing. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+    let isMounted = true
+
+    const syncUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
+      if (isMounted) setUser(user)
     }
 
-    getUser()
+    syncUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null)
+      (_event, session) => {
+        if (isMounted) setUser(session?.user ?? null)
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      isMounted = false
+      subscription.unsubscribe()
+    }
   }, [supabase])
 
   return (
@@ -53,4 +67,4 @@ export const useSupabase = () => {
     throw new Error('useSupabase must be used inside SupabaseProvider')
   }
   return context
-} 
+}

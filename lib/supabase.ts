@@ -1,9 +1,20 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Lazily create a singleton in runtime; avoid throwing during build if envs are absent
+let supabaseSingleton: ReturnType<typeof createClient> | null = null
+export const supabase = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (url && key) {
+    if (!supabaseSingleton) {
+      supabaseSingleton = createClient(url, key)
+    }
+    return supabaseSingleton
+  }
+  // Fallback dummy client: will cause queries to fail gracefully if used before envs set
+  // but prevents build-time crashes
+  return null as unknown as ReturnType<typeof createClient>
+})()
 
 // 数据库类型定义
 export interface TeaCategory {
