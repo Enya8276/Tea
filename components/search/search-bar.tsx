@@ -51,7 +51,7 @@ export default function SearchBar() {
       const mockResults: SearchResult[] = [
         {
           id: '1',
-          type: 'tea',
+          type: 'tea' as const,
           title: '西湖龙井',
           subtitle: '绿茶 - 明前特级',
           url: '/tea/1',
@@ -59,7 +59,7 @@ export default function SearchBar() {
         },
         {
           id: '2',
-          type: 'tea',
+          type: 'tea' as const,
           title: '正山小种',
           subtitle: '红茶 - 传统工艺',
           url: '/tea/2',
@@ -67,7 +67,7 @@ export default function SearchBar() {
         },
         {
           id: '3',
-          type: 'teaware',
+          type: 'teaware' as const,
           title: '紫砂壶',
           subtitle: '宜兴紫砂 - 手工制作',
           url: '/teaware/1',
@@ -75,7 +75,7 @@ export default function SearchBar() {
         },
         {
           id: '4',
-          type: 'article',
+          type: 'article' as const,
           title: '茶道：东方美学的精髓',
           subtitle: '茶文化文章',
           url: '/culture/1',

@@ -6,12 +6,19 @@ import { supabase } from '@/lib/supabase'
 import { useCart } from '@/components/cart/cart-provider'
 import type { TeaProduct } from '@/lib/supabase'
 
+type TeaWithCategory = TeaProduct & {
+  tea_categories?: {
+    name?: string
+    slug?: string
+  } | null
+}
+
 interface TeaDetailProps {
   teaId: string
 }
 
 export default function TeaDetail({ teaId }: TeaDetailProps) {
-  const [tea, setTea] = useState<TeaProduct | null>(null)
+  const [tea, setTea] = useState<TeaWithCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const { dispatch } = useCart()
@@ -125,13 +132,13 @@ export default function TeaDetail({ teaId }: TeaDetailProps) {
           <div className="card p-4">
             <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">产地</div>
             <div className="font-medium text-gray-900 dark:text-white">
-              {tea.origin || '暂无信息'}
+              {tea.origin_region || '暂无信息'}
             </div>
           </div>
           <div className="card p-4">
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">净重</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">采摘季节</div>
             <div className="font-medium text-gray-900 dark:text-white">
-              {tea.weight}g
+              {tea.harvest_season || '暂无信息'}
             </div>
           </div>
           <div className="card p-4">

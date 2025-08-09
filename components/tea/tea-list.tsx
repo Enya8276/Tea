@@ -6,8 +6,15 @@ import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import type { TeaProduct } from '@/lib/supabase'
 
+type TeaWithCategory = TeaProduct & {
+  tea_categories?: {
+    name?: string
+    slug?: string
+  } | null
+}
+
 export default function TeaList() {
-  const [teas, setTeas] = useState<TeaProduct[]>([])
+  const [teas, setTeas] = useState<TeaWithCategory[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

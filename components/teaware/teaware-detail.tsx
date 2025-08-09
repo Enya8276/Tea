@@ -6,12 +6,19 @@ import { supabase } from '@/lib/supabase'
 import { useCart } from '@/components/cart/cart-provider'
 import type { TeawareProduct } from '@/lib/supabase'
 
+type TeawareWithCategory = TeawareProduct & {
+  teaware_categories?: {
+    name?: string
+    slug?: string
+  } | null
+}
+
 interface TeawareDetailProps {
   teawareId: string
 }
 
 export default function TeawareDetail({ teawareId }: TeawareDetailProps) {
-  const [teaware, setTeaware] = useState<TeawareProduct | null>(null)
+  const [teaware, setTeaware] = useState<TeawareWithCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const { dispatch } = useCart()
@@ -137,9 +144,9 @@ export default function TeawareDetail({ teawareId }: TeawareDetailProps) {
             </div>
           )}
           <div className="card p-4">
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">尺寸</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">使用指南</div>
             <div className="font-medium text-gray-900 dark:text-white">
-              {teaware.dimensions || '暂无信息'}
+              {teaware.usage_guide || '暂无信息'}
             </div>
           </div>
           <div className="card p-4">

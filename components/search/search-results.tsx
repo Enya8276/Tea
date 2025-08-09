@@ -41,7 +41,7 @@ export default function SearchResults({ query }: SearchResultsProps) {
       const mockResults: SearchResult[] = [
         {
           id: '1',
-          type: 'tea',
+          type: 'tea' as const,
           title: '西湖龙井',
           subtitle: '绿茶 - 明前特级',
           description: '产自浙江杭州西湖区，明前采摘，外形扁平挺直，色泽嫩绿光润。',
@@ -52,7 +52,7 @@ export default function SearchResults({ query }: SearchResultsProps) {
         },
         {
           id: '2',
-          type: 'teaware',
+          type: 'teaware' as const,
           title: '紫砂壶',
           subtitle: '宜兴紫砂 - 手工制作',
           description: '采用宜兴优质紫砂泥料，手工制作，造型优美，透气性好。',
@@ -63,7 +63,7 @@ export default function SearchResults({ query }: SearchResultsProps) {
         },
         {
           id: '3',
-          type: 'article',
+          type: 'article' as const,
           title: '茶道：东方美学的精髓',
           subtitle: '茶文化文章',
           description: '茶道不仅是一种饮茶方式，更是东方哲学与美学的完美体现。',
