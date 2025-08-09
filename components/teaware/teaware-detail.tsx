@@ -29,18 +29,28 @@ export default function TeawareDetail({ teawareId }: TeawareDetailProps) {
 
   const fetchTeawareDetail = async () => {
     try {
-      const { data, error } = await supabase
+      // 先查询茶具本身，避免 PostgREST 关系解析导致的构建期类型错误
+      const { data: teawareData, error: teawareError } = await supabase
         .from('teaware_products')
-        .select(`
-          *,
-          teaware_categories(name, slug)
-        `)
+        .select('*')
         .eq('id', teawareId)
         .eq('is_active', true)
         .single()
 
-      if (error) throw error
-      setTeaware(data)
+      if (teawareError) throw teawareError
+
+      let category: { name?: string; slug?: string } | null = null
+
+      if (teawareData?.category_id) {
+        const { data: categoryData } = await supabase
+          .from('teaware_categories')
+          .select('name, slug')
+          .eq('id', teawareData.category_id)
+          .single()
+        category = categoryData ?? null
+      }
+
+      setTeaware({ ...(teawareData as TeawareProduct), teaware_categories: category })
     } catch (error) {
       console.error('Error fetching teaware detail:', error)
     } finally {

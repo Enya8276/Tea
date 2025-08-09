@@ -84,12 +84,34 @@ export default function CheckoutContent() {
   const handlePlaceOrder = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // 调用后端接口创建订单
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          shippingAddress,
+          items: cartState.items.map(i => ({
+            id: i.id,
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+            sale_price: i.sale_price ?? null,
+            type: i.type,
+          }))
+        })
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data?.error || '下单失败')
+      }
+
       dispatch({ type: 'CLEAR_CART' })
       router.push('/orders')
     } catch (error) {
       console.error('Error placing order:', error)
-      alert('订单创建失败，请重试')
+      alert((error as any)?.message || '订单创建失败，请重试')
     } finally {
       setLoading(false)
     }

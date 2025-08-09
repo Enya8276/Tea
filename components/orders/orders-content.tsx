@@ -35,46 +35,14 @@ export default function OrdersContent() {
 
   const fetchOrders = async () => {
     try {
-      // 这里应该从数据库获取订单数据
-      // 由于我们还没有实现订单系统，这里显示模拟数据
-      const mockOrders: Order[] = [
-        {
-          id: '1',
-          order_number: 'TEA20241201001',
-          status: '已完成',
-          total_amount: 299,
-          created_at: '2024-12-01T10:30:00Z',
-          items: [
-            {
-              id: '1',
-              product_name: '西湖龙井',
-              quantity: 1,
-              price: 299,
-              product_type: 'tea'
-            }
-          ]
-        },
-        {
-          id: '2',
-          order_number: 'TEA20241128002',
-          status: '配送中',
-          total_amount: 159,
-          created_at: '2024-11-28T14:20:00Z',
-          items: [
-            {
-              id: '2',
-              product_name: '正山小种',
-              quantity: 1,
-              price: 159,
-              product_type: 'tea'
-            }
-          ]
-        }
-      ]
-      
-      setOrders(mockOrders)
+      const params = new URLSearchParams({ user_id: user!.id })
+      const res = await fetch(`/api/orders?${params.toString()}`)
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || '获取订单失败')
+      setOrders((data?.orders ?? []) as Order[])
     } catch (error) {
       console.error('Error fetching orders:', error)
+      setOrders([])
     } finally {
       setLoading(false)
     }
