@@ -49,7 +49,8 @@ export default function RelatedTeawares({ currentTeawareId }: RelatedTeawaresPro
         .limit(4)
 
       if (error) throw error
-      setRelatedTeawares(data || [])
+      const fetched = (data as unknown as RelatedTeaware[]) || []
+      setRelatedTeawares(fetched)
     } catch (error) {
       console.error('Error fetching related teawares:', error)
     } finally {

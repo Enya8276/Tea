@@ -40,7 +40,8 @@ export default function TeaDetail({ teaId }: TeaDetailProps) {
         .single()
 
       if (error) throw error
-      setTea(data)
+      const fetched = (data as unknown as TeaWithCategory) || null
+      setTea(fetched)
     } catch (error) {
       console.error('Error fetching tea detail:', error)
     } finally {

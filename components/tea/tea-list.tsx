@@ -33,7 +33,8 @@ export default function TeaList() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setTeas(data || [])
+      const fetched = (data as unknown as TeaWithCategory[]) || []
+      setTeas(fetched)
     } catch (error) {
       console.error('Error fetching teas:', error)
     } finally {

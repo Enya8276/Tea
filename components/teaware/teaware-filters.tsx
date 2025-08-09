@@ -22,7 +22,8 @@ export default function TeawareFilters() {
         .order('sort_order', { ascending: true })
 
       if (error) throw error
-      setCategories(data || [])
+      const fetched = (data as unknown as TeawareCategory[]) || []
+      setCategories(fetched)
     } catch (error) {
       console.error('Error fetching categories:', error)
     }

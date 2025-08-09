@@ -33,7 +33,8 @@ export default function TeawareList() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setTeawares(data || [])
+      const fetched = (data as unknown as TeawareWithCategory[]) || []
+      setTeawares(fetched)
     } catch (error) {
       console.error('Error fetching teawares:', error)
     } finally {

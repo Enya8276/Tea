@@ -49,7 +49,8 @@ export default function RelatedTeas({ currentTeaId }: RelatedTeasProps) {
         .limit(4)
 
       if (error) throw error
-      setRelatedTeas(data || [])
+      const fetched = (data as unknown as RelatedTea[]) || []
+      setRelatedTeas(fetched)
     } catch (error) {
       console.error('Error fetching related teas:', error)
     } finally {
