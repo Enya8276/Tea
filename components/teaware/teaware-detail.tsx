@@ -47,10 +47,10 @@ export default function TeawareDetail({ teawareId }: TeawareDetailProps) {
           .select('name, slug')
           .eq('id', teawareData.category_id)
           .single()
-        category = categoryData ?? null
+        category = (categoryData as { name?: string; slug?: string } | null) ?? null
       }
 
-      setTeaware({ ...(teawareData as TeawareProduct), teaware_categories: category })
+      setTeaware({ ...(teawareData as unknown as TeawareProduct), teaware_categories: category })
     } catch (error) {
       console.error('Error fetching teaware detail:', error)
     } finally {
